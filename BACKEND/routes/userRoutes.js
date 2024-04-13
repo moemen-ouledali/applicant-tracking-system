@@ -27,4 +27,30 @@ router.post('/register', async (req, res) => {
     }
 });
 
+
+// POST /login: Log in a user
+router.post('/login', async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        // Find the user by email
+        const user = await User.findOne({ email });
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+
+        // Check if the passwords match (currently without hashing)
+        if (user.password !== password) {
+            return res.status(401).send('Invalid credentials');
+        }
+
+        // Send success response (Consider implementing JWT or session here later)
+        res.send('Logged in successfully');
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Login error: ' + error.message);
+    }
+});
+
+
 module.exports = router;
